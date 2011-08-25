@@ -1,0 +1,25 @@
+== Formized - Sample application for Formize
+
+Formized uses Formize (https://github.com/burisu/formize) and permits to develop
+Formize. 
+
+== Getting Started
+
+1. Download <tt>formize</tt>
+  git clone https://github.com/burisu/formize
+
+2. Download <tt>formized</tt>
+  git clone https://github.com/burisu/formized
+
+3. Change directory to <tt>formized</tt> and run server:
+  cd formized
+  bundle install
+  bundle exec rake db:migrate
+  rails g formize:install # Not always necessary but recommended
+  rails server
+
+== Copyright
+
+Copyright (c) 2011 Brice Texier. See LICENSE.txt for
+further details.
+
