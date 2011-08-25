@@ -7,6 +7,9 @@ gem 'rails', '3.0.10'
 
 gem 'sqlite3'
 
+gem 'jquery-rails'
+gem 'formize', :path=>'vendor/ogems/formize'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -30,4 +33,3 @@ gem 'sqlite3'
 #   gem 'webrat'
 # end
 
-gem 'formize', :path=>'vendor/ogems/formize'

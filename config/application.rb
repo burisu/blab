@@ -38,5 +38,8 @@ module Formizer
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    # Adds 
+    config.action_view.javascript_expansions[:defaults] += %w(jquery_ui_formize.js formize.js)
   end
 end
