@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Role:</b>
+  <%= @collaboration.role_id %>
+</p>
+
+<p>
+  <b>Movie:</b>
+  <%= @collaboration.movie_id %>
+</p>
+
+<p>
+  <b>Person:</b>
+  <%= @collaboration.person_id %>
+</p>
+
+<p>
+  <b>Started on:</b>
+  <%= @collaboration.started_on %>
+</p>
+
+<p>
+  <b>Stopped on:</b>
+  <%= @collaboration.stopped_on %>
+</p>
+
+<p>
+  <b>Note:</b>
+  <%= @collaboration.note %>
+</p>
+
+
+<%= link_to 'Edit', edit_collaboration_path(@collaboration) %> |
+<%= link_to 'Back', collaborations_path %>

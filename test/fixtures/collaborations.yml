@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  role_id: 1
+  movie_id: 1
+  person_id: 1
+  started_on: 2011-08-25
+  stopped_on: 2011-08-25
+  note: MyText
+
+two:
+  role_id: 1
+  movie_id: 1
+  person_id: 1
+  started_on: 2011-08-25
+  stopped_on: 2011-08-25
+  note: MyText
