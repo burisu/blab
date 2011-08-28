@@ -1,5 +1,9 @@
 Formizer::Application.routes.draw do
-  resources :collaborations
+  resources :collaborations do
+    collection do
+      get :formize
+    end
+  end
 
   resources :roles
 

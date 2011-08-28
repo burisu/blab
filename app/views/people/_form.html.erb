@@ -10,31 +10,9 @@
       </ul>
     </div>
   <% end %>
+
   <%=formize_fields%>
-  <div class="field">
-    <%= f.label :type %><br />
-    <%= f.text_field :type %>
-  </div>
-  <div class="field">
-    <%= f.label :last_name %><br />
-    <%= f.text_field :last_name %>
-  </div>
-  <div class="field">
-    <%= f.label :first_name %><br />
-    <%= f.text_field :first_name %>
-  </div>
-  <div class="field">
-    <%= f.label :surname %><br />
-    <%= f.text_field :surname %>
-  </div>
-  <div class="field">
-    <%= f.label :born_on %><br />
-    <%= f.date_select :born_on %>
-  </div>
-  <div class="field">
-    <%= f.label :dead_on %><br />
-    <%= f.date_select :dead_on %>
-  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

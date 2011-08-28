@@ -1,4 +1,6 @@
 class CollaborationsController < ApplicationController
+  formize
+
   # GET /collaborations
   # GET /collaborations.xml
   def index

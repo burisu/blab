@@ -2,14 +2,27 @@
 
 (function($, undefined) {
 
-    $('input[data-datepicker]').ready(function() {
-	var element = $(this);
-	alert(element);
-	var altField = element.attr("data-datepicker");
-	alert(altField);
-	element.datepicker({altField: altField});
-    });
+    $(function(event) {
+	
+	// Initializes date fields
+	$('input[data-datepicker]').each(function(i) {
+	    var element = $(this);
+	    var altField = '#'+element.attr("data-datepicker"), dateFormat = element.attr("data-date-format");
+	    var locale = element.attr("data-locale");
+	    element.datepicker($.datepicker.regional['fr']);
+	    element.datepicker("option", "altField", altField);
+	    element.datepicker("option", "altFormat", 'yy-mm-dd');
+	});
 
+	// Initializes text areas
+	$('*[data-resize-in]').each(function(i) {
+	    var element = $(this);
+	    element.resizable({ handles: "se" }); // , containment: '#'+element.attr("data-resize-in")
+	});
+
+
+    });
+    
 })( jQuery );
 
 

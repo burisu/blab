@@ -1,4 +1,6 @@
 class RolesController < ApplicationController
+  formize
+
   # GET /roles
   # GET /roles.xml
   def index

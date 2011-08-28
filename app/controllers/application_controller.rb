@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
     for js in Dir.glob("vendor/ogems/formize/lib/assets/javascripts/*.js")
       FileUtils.cp(js, "public/javascripts/#{js.split(/[\/\\]+/)[-1]}")
     end
+    for js in Dir.glob("vendor/ogems/formize/lib/assets/stylesheets/*.js")
+      FileUtils.cp(js, "public/stylesheets/#{js.split(/[\/\\]+/)[-1]}")
+    end
   end
 
 end
