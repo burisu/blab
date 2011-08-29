@@ -1,10 +1,12 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
-#   Mayor.create(:name => 'Daley', :city => cities.first)
+if RUBY_VERSION >= "1.9"
+  require 'csv'
+else
+  require 'fastercsv'
+  CSV = FasterCSV
+end
+
 data = {}
 data[:roles] = [
                 {:name => "Actor"},
@@ -54,3 +56,10 @@ end
 for collab in collaborations
   Collaboration.create!(:role_id=>data[:roles][collab[0]][:id], :movie_id=>data[:movies][collab[1]][:id], :person_id=>data[:people][collab[2]][:id])
 end
+
+
+# More people
+CSV.foreach(Rails.root.join('db', "actors.csv")) do |row|
+  Person.create!(:first_name=>row[0], :last_name=>row[1], :born_on=>row[2].to_date)
+end
+
