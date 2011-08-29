@@ -1,5 +1,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  layout :dialog
+
+  def dialog
+    return (request.xhr? ? false : "application")
+  end
 
   if Rails.env == "development"
     require_dependency "vendor/ogems/formize/lib/formize.rb"
