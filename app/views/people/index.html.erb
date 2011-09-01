@@ -6,6 +6,7 @@
     <th>Last name</th>
     <th>First name</th>
     <th>Surname</th>
+    <th>Default Role</th>
     <th>Born on</th>
     <th>Dead on</th>
     <th></th>
@@ -19,6 +20,7 @@
     <td><%= person.last_name %></td>
     <td><%= person.first_name %></td>
     <td><%= person.surname %></td>
+    <td><%=(person.default_role ? link_to(person.default_role.name, person.default_role) : '') %></td>
     <td><%= person.born_on %></td>
     <td><%= person.dead_on %></td>
     <td><%= link_to 'Show', person %></td>

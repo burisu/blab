@@ -39,7 +39,7 @@ Formize.Overlay = {
         var overlay = $('#overlay');
     	if (overlay !== null) {
             if (this.count <= 0) {
-    		overlay.remove();
+    		overlay.fadeOut(400, function() { $(this).remove(); });
     	    } else {
     		overlay.css('z-index', this.zIndex());
     	    }
@@ -59,7 +59,7 @@ Formize.Overlay = {
 
 Formize.Dialog = {
 
-    /* Opens a div like a virtual popup*/
+    // Opens a div like a virtual popup
     open: function (url, updated, ratio) {
         var height = $(document).height(), width = $(document).width();
         var dialog_id = 'dialog'+Formize.Overlay.count;
@@ -67,17 +67,17 @@ Formize.Dialog = {
 	
         Formize.Overlay.add();
 
-        $.ajax({
-	    url: url,
-            parameters: {dialog: dialog_id},
+        $.ajax(url, {
+            data: {dialog: dialog_id},
             success: function(data, textStatus, jqXHR) {
 		var dialog = $(document.createElement('div'));
                 dialog.attr({id: dialog_id, 'data-ratio': ratio, 'data-dialog-update': updated, flex: '1', 'class': 'dialog', style: 'z-index:'+(Formize.Overlay.zIndex()+1)+'; position:fixed; display: none;'});
                 $('body').append(dialog);
                 dialog.html(data);
 		Formize.Dialog.resize(dialog);
-		dialog.trigger("page:update");
-		dialog.fadeIn();
+		dialog.fadeIn(400, function() { 
+		    $(document).trigger("dom:update", dialog.attr('id')); 
+		});
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert("FAILURE (Error "+textStatus+"): "+errorThrown);
@@ -87,34 +87,97 @@ Formize.Dialog = {
     },
 
     resize: function (dialog) {
-        var width = $(document).width(), height = $(document).height();
+        var width = $(window).width(), height = $(window).height();
 	var ratio = parseFloat(dialog.attr('data-ratio'));
         var w = dialog.width();
         var h = dialog.height();
         if (ratio > 0) {
             w = ratio*width;
-            if (h > ratio*height) {
-		h = ratio*height;
-	    }
+	    h = ratio*height;
         }
         dialog.animate({left: ((width-w)/2)+'px', top: ((height-h)/2)+'px', width: w+'px', height: h+'px'});
         return true;
     },
 
-    /* Close a virtual popup */
-    close: function (dialog) {
-        dialog = $('#'+dialog)[0];
-        dialog.remove();
+    // Close a virtual popup
+    close: function(dialog) {
+        dialog = $('#'+dialog);
+        dialog.fadeOut(400, function() { $(this).remove(); });
         Formize.Overlay.remove();
         return true;
-    }
+    },
 
+    submitForm: function(form) {
+        var dialog_id = form.attr('data-dialog');
+        var dialog = $('#'+dialog_id);
+	
+        var field = $(document.createElement('input'));
+	field.attr({ type: 'hidden', name: 'dialog', value: dialog_id });
+        form.append(field);
+
+	$.ajax(form.attr('action'), {
+	    type: form.attr('method') || 'POST',
+	    data: form.serialize(),
+	    success: function(data, textStatus, request) {
+		var record_id = request.getResponseHeader("X-Saved-Record-Id");
+                if (record_id === null) {
+                    // No return => validation error
+                    dialog.html(request.responseText);
+		    $(document).trigger("dom:update", dialog.attr('id'));
+                } else {
+                    // Refresh element with its refresh URL
+                    var updated = $('#'+dialog.attr('data-dialog-update'));
+                    if (updated[0] !== undefined) {
+			var url = updated.attr('data-refresh');
+			$.ajax(url, {
+			    data: {selected: record_id},
+			    success: function(data2, textStatus2, request2) {
+				updated.replaceWith(request2.responseText);
+				$(document).trigger("dom:update");
+			    }
+			});
+                    }
+                    // Close dialog
+                    Formize.Dialog.close(dialog_id);
+                }
+	    }
+	});
+        return false;
+    }
 
 };
 
+/**
+ * Special method which is a sharthand to bind every element
+ * concerned by the selector now and in the future. It correspond
+ * to a lack of functionnality of jQuery on 'load' events.
+ */
+$.rebindeds = [];
+function behave(selector, eventType, handler) {
+    if (eventType == "load") {
+	$(document).ready(function(event) {
+	    $(selector).each(handler);
+	    $(selector).attr('data-already-bound', 'true');
+	});
+	$.rebindeds.push({selector: selector, handler:handler});
+    } else {
+	$(selector).live(eventType, handler);
+    }
+}
 
-
-
+// Rebinds unbound elements on DOM updates.
+$(document).bind('dom:update', function(event, element_id) {
+    var rebinded;
+    for (var i=0; i<$.rebindeds.length; i++) {
+	rebinded = $.rebindeds[i];
+	$(rebinded.selector).each(function(x, element){
+	    if ($(element).attr('data-already-bound') !== 'true') {
+		rebinded.handler.call($(element));
+		$(element).attr('data-already-bound', 'true');
+	    }
+	});
+    }
+});
 
 
 //(function($, undefined) {
@@ -123,17 +186,19 @@ Formize.Dialog = {
 // function initializeWidgets(event) {    }
 
 // $(document).ready(initializeWidgets);
-// $(document).bind('page:update', initializeWidgets);
+// $(document).bind('dom:update', initializeWidgets);
 // $(document).ready(function(event) {
 // $(document).bind('ready', initializeWidgets);
 
 // Initializes unroll inputs
-$('input[data-unroll]').live("focusin", function(event) {
+behave('input[data-unroll]', 'load', function() {
     //    $('input[data-unroll]').each(function(i) {
     var element = $(this), choices, paramName;
-    if (element.autocompleteType !== null && element.autocompleteType !== undefined) { 
-	return false;
-    }
+    // alert(element.attr('data-value-container'));
+
+    //if (element.autocompleteType !== null && element.autocompleteType !== undefined) { 
+    //return false;
+    //}
     
     element.unrollCache = element.val();
     element.autocompleteType = "text";
@@ -164,7 +229,7 @@ $('input[data-unroll]').live("focusin", function(event) {
 
 
 // Initializes date fields
-$('input[data-datepicker]').live("focusin", function(event) {
+behave('input[data-datepicker]', "load", function() {
     var element = $(this);
     var altField = '#'+element.attr("data-datepicker"), dateFormat = element.attr("data-date-format");
     var locale = element.attr("data-locale");
@@ -175,23 +240,38 @@ $('input[data-datepicker]').live("focusin", function(event) {
 
 // Initializes resizable text areas
 // Minimal size is defined on default size of the area
-$('textarea[data-resize-in]').live("focusin", function(event) {
+behave('textarea[data-resizable]', "load", function() {
     var element = $(this);
     element.resizable({ 
 	handles: "se",
 	minHeight: element.height(),
 	minWidth: element.width(),
+	create: function (event, ui) { $(this).css("padding-bottom", "0px"); },
+	stop: function (event, ui) { $(this).css("padding-bottom", "0px"); }
     });
 });
 
 // Opens a dialog for a ressource creation
-$("a[data-add-item]").live("click", function(event) {
+behave("a[data-add-item]", "click", function() {
     var element = $(this);
     var list_id = element.attr('data-add-item');
     var url = element.attr('href');
     Formize.Dialog.open(url, list_id);
     return false;
 });
+
+// Closes a dialog
+behave("a[data-close-dialog]", "click", function() {
+    var dialog_id = element.attr('data-close-dialog');
+    Formize.Dialog.close(dialog_id);
+    return false;
+});
+
+// Submits dialog forms
+behave("form[data-dialog]", "submit", function() {
+    return Formize.Dialog.submitForm($(this));
+});
+
 
 // Resizes the overlay automatically
 $(window).resize(function() {
@@ -201,12 +281,6 @@ $(window).resize(function() {
     });
 });
 
-// Closes a dialog
-$("a[data-close-dialog]").live("click", function(event) {
-    var dialog_id = element.attr('data-close-dialog');
-    Formize.Dialog.close(dialog_id);
-    return false;
-});
 
 
 // })( jQuery );

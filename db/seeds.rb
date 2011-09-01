@@ -60,6 +60,6 @@ end
 
 # More people
 CSV.foreach(Rails.root.join('db', "actors.csv")) do |row|
-  Person.create!(:first_name=>row[0], :last_name=>row[1], :born_on=>row[2].to_date)
+  Person.create!(:first_name=>row[0], :last_name=>row[1], :born_on=>row[2].to_date, :default_role_id=>data[:roles][0][:id])
 end
 

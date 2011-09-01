@@ -7,7 +7,11 @@ Formizer::Application.routes.draw do
 
   resources :roles
 
-  resources :people
+  resources :people do
+    collection do
+      get :formize
+    end
+  end
 
   resources :movies
 

@@ -43,10 +43,13 @@ class RolesController < ApplicationController
   # POST /roles.xml
   def create
     @role = Role.new(params[:role])
+    # response.header[:test] = "Tet"
+    # raise response.header.inspect
 
     respond_to do |format|
       if @role.save
-        format.html { redirect_to(@role, :notice => 'Role was successfully created.') }
+        response.headers["X-Saved-Record-Id"] = @role.id.to_s
+        format.html { request.xhr? ? head(:ok) : redirect_to(@role, :notice => 'Role was successfully created.') }
         format.xml  { render :xml => @role, :status => :created, :location => @role }
       else
         format.html { render :action => "new" }
@@ -62,7 +65,7 @@ class RolesController < ApplicationController
 
     respond_to do |format|
       if @role.update_attributes(params[:role])
-        format.html { redirect_to(@role, :notice => 'Role was successfully updated.') }
+        format.html { redirect_to(@role, :notice => 'Role was successfully updated.', :x_saved_record_id=>@role.id) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
