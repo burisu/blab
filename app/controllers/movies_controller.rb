@@ -46,7 +46,8 @@ class MoviesController < ApplicationController
 
     respond_to do |format|
       if @movie.save
-        format.html { redirect_to(@movie, :notice => 'Movie was successfully created.') }
+        response.headers["X-Saved-Record-Id"] = @movie.id.to_s
+        format.html { request.xhr? ? head(:ok) : redirect_to(@movie, :notice => 'Movie was successfully created.') }
         format.xml  { render :xml => @movie, :status => :created, :location => @movie }
       else
         format.html { render :action => "new" }
@@ -62,7 +63,8 @@ class MoviesController < ApplicationController
 
     respond_to do |format|
       if @movie.update_attributes(params[:movie])
-        format.html { redirect_to(@movie, :notice => 'Movie was successfully updated.') }
+        response.headers["X-Saved-Record-Id"] = @movie.id.to_s
+        format.html { request.xhr? ? head(:ok) : redirect_to(@movie, :notice => 'Movie was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

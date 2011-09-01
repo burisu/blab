@@ -16,7 +16,7 @@ class CollaborationsController < ApplicationController
   # GET /collaborations
   # GET /collaborations.xml
   def index
-    @collaborations = Collaboration.all
+    @collaborations = Collaboration.includes(:role, :person, :movie)
 
     respond_to do |format|
       format.html # index.html.erb
