@@ -1,5 +1,17 @@
 class CollaborationsController < ApplicationController
-  formize
+  formize do |f|
+
+    f.field_set do |fs|
+      fs.field :person, :choices=>:all, :new=>true
+      fs.field :movie, :choices=>:all, :new=>true
+      fs.field :role, :choices=>:all, :new=>true, :depend_on=>:person, :default=>"person.default_role"
+      fs.field :started_on, :depend_on=>:movie, :default=>"movie.first_on"
+      fs.field :stopped_on, :depend_on=>:movie, :default=>"movie.first_on"
+      fs.field :note
+    end
+
+  end
+
 
   # GET /collaborations
   # GET /collaborations.xml

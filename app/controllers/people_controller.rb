@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+  formize
+
   # GET /people
   # GET /people.xml
   def index
@@ -20,8 +22,6 @@ class PeopleController < ApplicationController
       format.xml  { render :xml => @person }
     end
   end
-
-  formize
 
   # GET /people/new
   # GET /people/new.xml

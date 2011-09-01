@@ -8,8 +8,11 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-<%= yield %>
-
+<div id="menu">
+  <% for x in [:people, :movies, :roles, :collaborations] -%>
+  <%=link_to(x.to_s.humanize, :controller=>x, :action=>:index)  -%>
+  <% end -%>
+</div>
+<div id="main"><%= yield %></div>
 </body>
 </html>

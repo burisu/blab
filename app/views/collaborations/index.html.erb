@@ -15,9 +15,9 @@
 
 <% @collaborations.each do |collaboration| %>
   <tr>
-    <td><%= collaboration.role_id %></td>
-    <td><%= collaboration.movie_id %></td>
-    <td><%= collaboration.person_id %></td>
+    <td><%= link_to(collaboration.role.name, collaboration.role) %></td>
+    <td><%= link_to(collaboration.movie.title, collaboration.movie) %></td>
+    <td><%= link_to(collaboration.person.label, collaboration.person) %></td>
     <td><%= collaboration.started_on %></td>
     <td><%= collaboration.stopped_on %></td>
     <td><%= collaboration.note %></td>

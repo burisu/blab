@@ -147,6 +147,37 @@ Formize.Dialog = {
 
 };
 
+
+Formize.refreshDependents = function (event) {
+    var element = $(this);
+    var dependents = element.attr('data-dependents');
+    var params = {};
+    if (element.val() !== null && element.val() !== undefined) {
+        params[element.attr('id')] = element.val();
+        $(dependents).each(function(index, item) {
+            // Replaces element
+            var url = $(item).attr('data-refresh');
+            if (url !== null) {
+                $.ajax(url, {
+                    data: params,
+                    success: function(data, textStatus, response) {
+			// alert("Success: "+response.responseText);
+                        $(item).replaceWith(response.responseText);
+			$(document).trigger("dom:update");
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+			alert("FAILURE (Error "+textStatus+"): "+errorThrown);
+                    }
+                });
+            }
+        });
+        return true;
+    }
+    return false;
+}
+
+
+
 /**
  * Special method which is a sharthand to bind every element
  * concerned by the selector now and in the future. It correspond
@@ -209,7 +240,7 @@ behave('input[data-unroll]', 'load', function() {
     }
     element.maxResize = parseInt(element.attr('data-max-resize'));
     if (isNaN(element.maxResize) || element.maxResize === 0) { element.maxResize = 64; }
-    element.size = (element.unrollCache.length > element.maxResize ? element.maxResize : element.unrollCache.length);
+    element.size = (element.unrollCache.length < 32 ? 32 : element.unrollCache.length > element.maxResize ? element.maxResize : element.unrollCache.length);
     
     element.autocomplete({
 	source: element.attr('data-unroll'),
@@ -218,7 +249,7 @@ behave('input[data-unroll]', 'load', function() {
 	    var selected = ui.item;
 	    element.valueField.value = selected.id;
 	    element.unrollCache = selected.label;
-	    element.attr("size", (element.unrollCache.length > element.maxResize ? element.maxResize : element.unrollCache.length));
+	    element.attr("size", (element.unrollCache.length < 32 ? 32 : element.unrollCache.length > element.maxResize ? element.maxResize : element.unrollCache.length));
 	    $(element.valueField).trigger("emulated:change");
 	    return true;
 	}
@@ -231,11 +262,15 @@ behave('input[data-unroll]', 'load', function() {
 // Initializes date fields
 behave('input[data-datepicker]', "load", function() {
     var element = $(this);
-    var altField = '#'+element.attr("data-datepicker"), dateFormat = element.attr("data-date-format");
     var locale = element.attr("data-locale");
-    element.datepicker($.datepicker.regional['fr']);
-    element.datepicker("option", "altField", altField);
-    element.datepicker("option", "altFormat", 'yy-mm-dd');
+    var options = $.datepicker.regional[locale];
+    if (element.attr("data-date-format") !== null) {
+	options['dateFormat'] = element.attr("data-date-format");
+    }
+    options['altField'] = '#'+element.attr("data-datepicker");
+    options['altFormat'] = 'yy-mm-dd';
+    options['defaultDate'] = element.val();
+    element.datepicker(options);
 });
 
 // Initializes resizable text areas
@@ -272,6 +307,9 @@ behave("form[data-dialog]", "submit", function() {
     return Formize.Dialog.submitForm($(this));
 });
 
+behave("*[data-dependents]", "change", Formize.refreshDependents);
+behave("select[data-dependents]", "keypress", Formize.refreshDependents);
+behave("*[data-dependents]", "emulated:change", Formize.refreshDependents);
 
 // Resizes the overlay automatically
 $(window).resize(function() {
