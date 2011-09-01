@@ -1,7 +1,7 @@
 PATH
   remote: vendor/ogems/formize
   specs:
-    formize (0.0.9)
+    formize (0.0.10)
       fastercsv
       jquery-rails
       rails (~> 3)

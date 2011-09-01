@@ -5,8 +5,10 @@ class CollaborationsController < ApplicationController
       fs.field :person, :choices=>:all, :new=>true
       fs.field :movie, :choices=>:all, :new=>true
       fs.field :role, :choices=>:all, :new=>true, :depend_on=>:person, :default=>"person.default_role"
-      fs.field :started_on, :depend_on=>:movie, :default=>"movie.first_on"
-      fs.field :stopped_on, :depend_on=>:movie, :default=>"movie.first_on"
+      fs.group :depend_on=>:movie do |g|
+        g.field :started_on, :default=>"movie.first_on - 1.year"
+        g.field :stopped_on, :default=>"movie.first_on"
+      end
       fs.field :note
     end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110901074455) do
+ActiveRecord::Schema.define(:version => 20110901131408) do
 
   create_table "collaborations", :force => true do |t|
     t.integer  "role_id"
@@ -30,6 +30,9 @@ ActiveRecord::Schema.define(:version => 20110901074455) do
     t.date     "first_on"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "awarded"
+    t.boolean  "several_times_awarded"
+    t.integer  "awards_count"
   end
 
   create_table "people", :force => true do |t|

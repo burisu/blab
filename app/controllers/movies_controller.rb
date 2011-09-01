@@ -1,4 +1,12 @@
 class MoviesController < ApplicationController
+  formize do |f|
+    f.fields :title, :duration, :first_on, :awarded
+    f.group :shown_if=>:awarded do |g|
+      g.field :several_times_awarded
+      g.field :awards_count, :shown_if=>:several_times_awarded
+    end
+  end
+
   # GET /movies
   # GET /movies.xml
   def index
@@ -20,8 +28,6 @@ class MoviesController < ApplicationController
       format.xml  { render :xml => @movie }
     end
   end
-
-  formize
 
   # GET /movies/new
   # GET /movies/new.xml
