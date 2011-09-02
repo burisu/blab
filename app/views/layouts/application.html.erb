@@ -10,7 +10,7 @@
 <body>
 <div id="menu">
   <% for x in [:people, :movies, :roles, :collaborations] -%>
-  <%=link_to(x.to_s.humanize, :controller=>x, :action=>:index)  -%>
+  <%=link_to(x.to_s.humanize, {:controller=>x, :action=>:index}, :class=>(self.controller_name.to_sym == x ? 'current' : ''))  -%>
   <% end -%>
 </div>
 <div id="main"><%= yield %></div>

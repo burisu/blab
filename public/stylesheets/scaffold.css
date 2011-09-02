@@ -57,5 +57,5 @@ div.field, div.actions {
 
 #menu { background: black; padding: 8px; position: fixed; width: 100%; -moz-box-shadow: 0 0 10px rgba(0,0,0,0.5)}
 #menu a { padding: 8px; margin: 0; color: #CCC; text-decoration: none}
-#menu a:hover { background: #555; color: #FFF;}
+#menu a:hover, #menu a.current { background: #555; color: #FFF;}
 #main { padding: 32px 8px 8px;  }
