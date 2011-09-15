@@ -43,36 +43,14 @@ class RolesController < ApplicationController
   # POST /roles.xml
   def create
     @role = Role.new(params[:role])
-    # response.header[:test] = "Tet"
-    # raise response.header.inspect
-
-    respond_to do |format|
-      if @role.save
-        response.headers["X-Saved-Record-Id"] = @role.id.to_s
-        format.html { request.xhr? ? head(:ok) : redirect_to(@role, :notice => 'Role was successfully created.') }
-        format.xml  { render :xml => @role, :status => :created, :location => @role }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @role.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@role)
   end
 
   # PUT /roles/1
   # PUT /roles/1.xml
   def update
     @role = Role.find(params[:id])
-
-    respond_to do |format|
-      if @role.update_attributes(params[:role])
-        response.headers["X-Saved-Record-Id"] = @role.id.to_s
-        format.html { request.xhr? ? head(:ok) : redirect_to(@role, :notice => 'Role was successfully updated.', :x_saved_record_id=>@role.id) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @role.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@role, :attributes=>params[:role])
   end
 
   # DELETE /roles/1

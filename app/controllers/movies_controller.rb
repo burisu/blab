@@ -7,6 +7,19 @@ class MoviesController < ApplicationController
     end
   end
 
+  def search
+    if request.post?
+      @movies = Movie.where("title LIKE ?", "%#{params[:search].to_s.gsub(/\W+/, '%')}%")
+      count = @movies.count
+      response.headers["X-Return-Code"] = (count.zero? ? "zero" : count == 1 ? "one" : "many")
+      if count == 1
+        render :text=>url_for(@movies[0]), :layout=>false
+        return
+      end
+    end
+  end
+
+
   # GET /movies
   # GET /movies.xml
   def index
@@ -49,34 +62,14 @@ class MoviesController < ApplicationController
   # POST /movies.xml
   def create
     @movie = Movie.new(params[:movie])
-
-    respond_to do |format|
-      if @movie.save
-        response.headers["X-Saved-Record-Id"] = @movie.id.to_s
-        format.html { request.xhr? ? head(:ok) : redirect_to(@movie, :notice => 'Movie was successfully created.') }
-        format.xml  { render :xml => @movie, :status => :created, :location => @movie }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @movie.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@movie)
   end
 
   # PUT /movies/1
   # PUT /movies/1.xml
   def update
     @movie = Movie.find(params[:id])
-
-    respond_to do |format|
-      if @movie.update_attributes(params[:movie])
-        response.headers["X-Saved-Record-Id"] = @movie.id.to_s
-        format.html { request.xhr? ? head(:ok) : redirect_to(@movie, :notice => 'Movie was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @movie.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@movie, :attributes=>params[:movie])
   end
 
   # DELETE /movies/1

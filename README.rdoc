@@ -5,13 +5,14 @@ Formize.
 
 == Getting Started
 
-1. Download <tt>formize</tt>
+1. Download +formize+ and +combo_box+
   git clone https://github.com/burisu/formize
+  git clone https://github.com/burisu/combo_box
 
-2. Download <tt>formized</tt>
+2. Download +formized+
   git clone https://github.com/burisu/formized
 
-3. Change directory to <tt>formized</tt> and run server:
+3. Change directory to +formized+ and run server:
   cd formized
   bundle install
   bundle exec rake db:migrate

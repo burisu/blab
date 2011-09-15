@@ -1,0 +1,9 @@
+%h1 Search
+%p Type some text to search for movies:
+=form_tag do
+  =text_field_tag("search", params[:search])
+-if @movies
+  %ul#movies-list
+    -for movie in @movies
+      %li=link_to movie.title, movie
+

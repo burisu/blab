@@ -5,15 +5,23 @@ Formizer::Application.routes.draw do
     end
   end
 
-  resources :roles
+  resources :roles do
+  end
 
   resources :people do
     collection do
       get :formize
+      get :search_for
+      get :search_for_default_role
     end
   end
 
-  resources :movies
+  resources :movies do
+    collection do
+      get :search
+      post :search
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

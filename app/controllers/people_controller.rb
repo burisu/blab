@@ -1,6 +1,9 @@
 class PeopleController < ApplicationController
   formize
 
+  search_for
+  search_for :default_role, "Role"
+
   # GET /people
   # GET /people.xml
   def index
@@ -43,34 +46,14 @@ class PeopleController < ApplicationController
   # POST /people.xml
   def create
     @person = Person.new(params[:person])
-
-    respond_to do |format|
-      if @person.save
-        response.headers["X-Saved-Record-Id"] = @person.id.to_s
-        format.html { request.xhr? ? head(:ok) : redirect_to(@person, :notice => 'Person was successfully created.') }
-        format.xml  { render :xml => @person, :status => :created, :location => @person }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@person)
   end
 
   # PUT /people/1
   # PUT /people/1.xml
   def update
     @person = Person.find(params[:id])
-
-    respond_to do |format|
-      if @person.update_attributes(params[:person])
-        response.headers["X-Saved-Record-Id"] = @person.id.to_s
-        format.html { request.xhr? ? head(:ok) : redirect_to(@person, :notice => 'Person was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@person, :attributes=>params[:person])
   end
 
   # DELETE /people/1

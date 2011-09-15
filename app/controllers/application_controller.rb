@@ -7,21 +7,22 @@ class ApplicationController < ActionController::Base
   end
 
   if Rails.env == "development"
-    require_dependency "vendor/ogems/formize/lib/formize.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/definition.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/definition/form.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/definition/form_element.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/definition/field_set.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/definition/field.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/generator.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/form_helper.rb"
-    require_dependency "vendor/ogems/formize/lib/formize/action_pack.rb"
-    for js in Dir.glob("vendor/ogems/formize/lib/assets/javascripts/*.js")
-      FileUtils.cp(js, "public/javascripts/#{js.split(/[\/\\]+/)[-1]}")
+    lib_dir = "vendor/ogems/formize/lib/formize"
+    for dependency in Dir.glob("#{lib_dir}/**/*.rb")
+      require_dependency lib_dir+dependency.split(lib_dir)[-1][0..-4]
     end
-    for js in Dir.glob("vendor/ogems/formize/lib/assets/stylesheets/*.css")
-      FileUtils.cp(js, "public/stylesheets/#{js.split(/[\/\\]+/)[-1]}")
+    assets_dir = "vendor/ogems/formize/lib/assets"
+    for js in Dir.glob("#{assets_dir}/**/*.*")
+      FileUtils.cp(js, "public#{js.split(assets_dir)[-1]}")
+    end 
+    lib_dir = "vendor/ogems/combo_box/lib/combo_box"
+    for dependency in Dir.glob("#{lib_dir}/**/*.rb")
+      require_dependency lib_dir+dependency.split(lib_dir)[-1][0..-4]
     end
+    assets_dir = "vendor/ogems/combo_box/lib/assets"
+    for js in Dir.glob("#{assets_dir}/**/*.*")
+      FileUtils.cp(js, "public#{js.split(assets_dir)[-1]}")
+    end 
   end
 
 end

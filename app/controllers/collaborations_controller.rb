@@ -57,32 +57,14 @@ class CollaborationsController < ApplicationController
   # POST /collaborations.xml
   def create
     @collaboration = Collaboration.new(params[:collaboration])
-
-    respond_to do |format|
-      if @collaboration.save
-        format.html { redirect_to(@collaboration, :notice => 'Collaboration was successfully created.') }
-        format.xml  { render :xml => @collaboration, :status => :created, :location => @collaboration }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @collaboration.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@collaboration)
   end
 
   # PUT /collaborations/1
   # PUT /collaborations/1.xml
   def update
     @collaboration = Collaboration.find(params[:id])
-
-    respond_to do |format|
-      if @collaboration.update_attributes(params[:collaboration])
-        format.html { redirect_to(@collaboration, :notice => 'Collaboration was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @collaboration.errors, :status => :unprocessable_entity }
-      end
-    end
+    save_and_respond(@collaboration, :attributes=>params[:collaboration])
   end
 
   # DELETE /collaborations/1

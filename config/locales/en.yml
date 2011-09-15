@@ -7,3 +7,10 @@ en:
     formats:
       default: '%m/%d/%Y'
     order: [:month, :day, :year]
+  time:
+    am: 'am'
+    formats:
+      default: '%b. %d, %Y at %H:%M:%S'
+      long: '%B %d, %Y %H:%M'
+      short: '%d %b %H:%M'
+    pm: 'pm'
