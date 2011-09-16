@@ -28,3 +28,5 @@
 
 <%= link_to 'Search', search_movies_path, "data-search"=>"results" %>
 <div id="results"></div>
+<%= date_field_tag("today", Date.today) -%>
+<%= datetime_field_tag("now", Time.now) -%>

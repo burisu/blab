@@ -5,6 +5,7 @@ class MoviesController < ApplicationController
       g.field :several_times_awarded
       g.field :awards_count, :shown_if=>:several_times_awarded
     end
+    f.field :created_at
   end
 
   def search

@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   end
 
   if Rails.env == "development"
+    Formize.compile!
     lib_dir = "vendor/ogems/formize/lib/formize"
     for dependency in Dir.glob("#{lib_dir}/**/*.rb")
       require_dependency lib_dir+dependency.split(lib_dir)[-1][0..-4]
