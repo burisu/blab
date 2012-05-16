@@ -1,6 +1,6 @@
-== Formized - Sample application for Formize
+== Blab - Sample application for Formize
 
-Formized uses Formize (https://github.com/burisu/formize) and permits to develop
+Blab uses Formize (https://github.com/burisu/formize) and permits to develop
 Formize. 
 
 == Getting Started
@@ -9,11 +9,11 @@ Formize.
   git clone https://github.com/burisu/formize
   git clone https://github.com/burisu/combo_box
 
-2. Download +formized+
-  git clone https://github.com/burisu/formized
+2. Download +blab+
+  git clone https://github.com/burisu/blab
 
-3. Change directory to +formized+ and run server:
-  cd formized
+3. Change directory to +blab+ and run server:
+  cd blab
   bundle install
   bundle exec rake db:migrate
   rails g formize:install # Not always necessary but recommended
